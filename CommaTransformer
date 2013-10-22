@@ -1,0 +1,30 @@
+import java.util.List;
+import java.util.Map;
+
+import org.apache.solr.handler.dataimport.Context;
+import org.apache.solr.handler.dataimport.DataImporter;
+import org.apache.solr.handler.dataimport.Transformer;
+
+/**
+ * 将字段中的逗号替换为空格 
+ * 在data-config.xml文件的entity配置项增加transformer="xx.xx.CommaTransformer",并在field配置项增加replaceComma="true"
+ *
+ */
+public class CommaTransformer extends Transformer {
+
+	@Override
+	public Object transformRow(Map<String, Object> row, Context context) {
+		List<Map<String, String>> fields = context.getAllEntityFields();
+		for (Map<String, String> field : fields) {
+			String replaceComma = field.get("replaceComma");
+			if ("true".equals(replaceComma)) {
+				String columnName = field.get(DataImporter.COLUMN);
+				Object value = row.get(columnName);
+				if (value != null)
+					row.put(columnName, value.toString().replace(",", " ").trim());
+			}
+		}
+		return row;
+	}
+
+}
