@@ -1,0 +1,4 @@
+solrPlugin
+==========
+
+solr plugins 
